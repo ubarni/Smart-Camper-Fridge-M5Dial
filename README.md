@@ -55,6 +55,9 @@ Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 1
 * **PWM Output:** M5Dial GPIO39 drives the internal LED of the first PC817 (via a current limiting resistor). The transistor side connects directly to Secop terminals **T** and **C**.
 * **DIAG Input:** Secop terminal **D** drives the second PC817 input. The output transistor pulls **GPIO38** down to GND when active. 
 
+## Wiring "Diagram"
+<img width="1220" height="689" alt="Smart Camper Fridge M5Stack Dial" src="https://github.com/user-attachments/assets/6f382df6-070e-4aa6-944d-a062819fc44a" />
+
 ---
 
 ## Software Installation
