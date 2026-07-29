@@ -2,27 +2,26 @@
 
 An advanced, ESPHome-powered smart controller for camper vans and overland vehicles equipped with a **Secop (formerly Danfoss) compressor controller** (e.g., 101N0650). 
 
-Built around the compact **M5Stack AtomS3R** (ESP32-S3) with an integrated color display, this project replaces mechanical thermostats with intelligent, dynamic PWM speed adjustments, live power/voltage tracking, multi-zone temperature monitoring, and a fully customizable bilingual UI (English/German).
+Built around the compact [**M5Stack Dial 1.1**](https://docs.m5stack.com/en/core/M5Dial) (M5StampS3) with an integrated 1.28-inch circular TFT touch screen.
+This project replaces mechanical thermostats with intelligent, dynamic PWM speed adjustments, live voltage tracking, multi-zone temperature monitoring, and a fully customizable presets.
 
 ---
 
 ## Features
 
-* 🧠 **Smart PWM Speed Control:** Dynamically adjusts the compressor speed between 2,500 and 4,400 RPM (scaled linearly from 0% to 100% in the UI) to maximize efficiency and cooling performance.
-* 🍦 **Triple-Zone Temperature Monitoring:** Dedicated high-precision DS18B20 sensor buses for the Fridge compartment, Freezer compartment, and the Compressor housing.
-* ⚡ **Real-Time Energy Tracking:** Measures live current (via ACS712 Hall-effect sensor) and dynamic battery voltage (via an analog voltage divider). Essential for LiFePO4 batteries where voltage heavily fluctuates during solar or alternator charging. Includes a continuous Watt-hour (Wh) consumption tracker.
-* 🇩🇪 🇬🇧 **Bilingual On-The-Fly UI:** Toggle the entire user interface on the physical screen and Home Assistant states between English and German instantly with a single click.
-* 🔒 **Compressor Protection Engine:** Includes a protective 30-second "Soft-Start" (holding the compressor at a safe 2,500 RPM) and a configurable anti-short-cycle "Locktime" countdown bar to protect the compressor from pressure-lock damage.
+* 🧠 **Smart PWM Speed Control:** Dynamically adjusts the compressor speed between 2500 and 3500 RPM (scaled linearly from 0% to 100% in the UI) to maximize efficiency and cooling performance.
+* 🍦 **Triple-Zone Temperature Monitoring:** Dedicated DS18B20 sensor buses for the Fridge compartment, Freezer compartment, and the Compressor housing.
+* ⚡ **Voltage Tracking:** Measures live battery voltage (via an analog voltage divider) and shuts down the compressor when low voltage. Includes a continuous estimated Watt-hour (Wh) consumption tracker.
+* 🔒 **Compressor Protection Engine:** Includes a protective 30-second "Soft-Start" (holding the compressor at a safe 2500 RPM) and a configurable anti-short-cycle "Locktime" countdown bar to protect the compressor from pressure-lock damage.
 * 🎛️ **GitHub-Ready Calibration Sliders:** Zero hardcoded sensor data. Users can calibrate the voltage divider offsets, current sensor zero-points, and noise-cutoffs directly via Home Assistant sliders.
-* 🔌 **Galvanically Isolated & Relay-Free:** Replaced clicking mechanical relays with optocouplers for silent, highly reliable, and automotive-safe communication with the Secop unit.
+* 🔌 **Galvanically Isolated & Relay-Free:** Optocouplers for silent, highly reliable, and automotive-safe communication with the Secop unit.
 
 ---
 
 ## Hardware Requirements
 
 ### Core Components
-* **Microcontroller:** M5Stack AtomS3R (ESP32-S3)
-* **Current Sensor:** ACS712 Hall-Effect Sensor Module (20A version recommended)
+* **Microcontroller:** M5Stack Dial 1.1 (M5StampS3)
 * **Temperature Sensors:** 3x DS18B20 (Waterproof probe style)
 
 ### Discretes & Safety
@@ -30,7 +29,7 @@ Built around the compact **M5Stack AtomS3R** (ESP32-S3) with an integrated color
 * **Resistors:** * 1x 47 kΩ + 1x 10 kΩ (For the 14V -> 3.3V analog voltage divider)
   * 1x 10 kΩ (Strong external pull-up for the DIAG optocoupler output to guarantee noise immunity)
   * Resistors matching your PC817 LED inputs (typically 220 Ohm to 470 Ohm)
-  * 3x 4.7 kΩ Pull-up resistors for the DS18B20 data lines
+  * 1x 4.7 kΩ Pull-up resistors for the DS18B20 data line
 
 ---
 
@@ -38,38 +37,34 @@ Built around the compact **M5Stack AtomS3R** (ESP32-S3) with an integrated color
 
 | Function | Pin (GPIO) | Type | Notes |
 | :--- | :--- | :--- | :--- |
-| **Fridge Temp** | GPIO5 | OneWire Bus | Temperature inside fridge compartment |
-| **Freezer Temp** | GPIO6 | OneWire Bus | Temperature inside freezer compartment |
-| **Compressor Temp** | GPIO7 | OneWire Bus | Monitor compressor surface temperatures |
-| **Current Meter** | GPIO1 | Analog In (ADC) | Connected to ACS712 `OUT` pin |
-| **Voltage Meter** | GPIO2 | Analog In (ADC) | Connected to the 47k/10k Resistor Divider |
-| **Secop DIAG** | GPIO38 | Digital In | Reads blink codes from Secop Error Terminal |
-| **Secop PWM** | GPIO39 | LEDC Out | Generates the 5kHz Speed Signal for Secop |
-| **Built-in Button**| GPIO41 | Binary Sensor | Multi-click interface for display navigation |
+| **Fridge Temp** | GPIO2 Yellow Port.B| OneWire Bus | Temperature inside fridge compartment |
+| **Freezer Temp** | GPIO2 Yellow Port.B| OneWire Bus | Temperature inside freezer compartment |
+| **Compressor Temp** | GPIO2 Yellow Port.B| OneWire Bus | Monitor compressor surface temperatures |
+| **Voltage Meter** | GPIO1 White Port.B| Analog In (ADC) | Connected to the 47k/10k Resistor Divider |
+| **Secop DIAG** | GPIO13 Yellow Port.A| Digital In | Reads blink codes from Secop Error Terminal |
+| **Secop PWM** | GPIO15 White Port.A| LEDC Out | Generates the 5kHz Speed Signal for Secop |
 
 ---
 
 ## Wiring & Schematic
 
 ### 1. High-Current DC Path (12V/24V)
-* Connect the main battery positive (+) through a fuse to the **IP+** terminal of the ACS712.
-* Connect **IP-** of the ACS712 directly to the **[+]** terminal of the Secop controller.
-* Connect Battery minus (-) directly to the **[-]** terminal of the Secop controller.
+* Connect the main battery positive (+) and negative (-) through a fuse to the M5Dial terminal. Voltage input range is 6 ~ 36V DC.
 
 ### 2. Voltage Divider (Battery Voltage Sense)
-Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 10 kΩ resistors into **GPIO2**. Connect the other side of the 10 kΩ resistor to **GND**.
+Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 10 kΩ resistors into **GPIO1**. Connect the other side of the 10 kΩ resistor to **GND**.
 
-> ⚠️ **CRITICAL NOTE:** The ground (GND) of the 12V Battery/Power supply and the GND of the AtomS3R **must** be tied together for the analog voltage and current inputs to share a valid electrical reference plane!
+> ⚠️ **CRITICAL NOTE:** The ground (GND) of the 12V Battery/Power supply and the GND of the M5Dial **must** be tied together for the analog voltage and current inputs to share a valid electrical reference plane!
 
 ### 3. Optocoupler Isolation (Secop Interface)
-* **PWM Output:** AtomS3R GPIO39 drives the internal LED of the first PC817 (via a current limiting resistor). The transistor side connects directly to Secop terminals **T** and **C**.
+* **PWM Output:** M5Dial GPIO39 drives the internal LED of the first PC817 (via a current limiting resistor). The transistor side connects directly to Secop terminals **T** and **C**.
 * **DIAG Input:** Secop terminal **D** drives the second PC817 input. The output transistor pulls **GPIO38** down to GND when active. 
 
 ---
 
 ## Software Installation
 
-1. Copy the contents of `camper-fridge.yaml` into your ESPHome environment.
+1. Copy the contents of `smart-camper-fridge-m5dial.yaml` into your ESPHome environment.
 2. Create a `secrets.yaml` file in the same directory (or use your existing one) containing your network and access parameters based on the following template:
 
 ```yaml
@@ -80,7 +75,7 @@ wifi_backup_password: "Your_Home_Password"
 ap_password: "Fallback_Access_Point_Password"
 ```
 
-3. Compile and flash the firmware to your AtomS3R. If transitioning between compilation environments, performing a **"Clean Build"** prior to flashing is recommended.
+3. Compile and flash the firmware to your M5Dial. If transitioning between compilation environments, performing a **"Clean Build"** prior to flashing is recommended.
 
 ---
 
