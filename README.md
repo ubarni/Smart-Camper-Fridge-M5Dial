@@ -1,6 +1,8 @@
 # Smart Camper Fridge Controller (M5Dial)
 
-An advanced, fully integrated open-source controller for 12V/24V camper refrigerators using SECOP (Danfoss) compressors, powered by an [**M5Stack Dial 1.1**](https://docs.m5stack.com/en/core/M5Dial) running **ESPHome**.
+An advanced, fully integrated open-source controller for 12V/24V camper refrigerators using SECOP (Danfoss) compressors, powered by an [**M5Stack Dial 1.1**](https://docs.m5stack.com/en/core/M5Dial) running **ESPHome** with **Home Assistant Integration**.
+
+Tested with [**WAECO Coolmatic MDC-090K**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/c926922314870ae8d956f22f25ac7502f4ca9708/manual-coolmatic-mdc090k.pdf) and [**SECOP 101N0650 Controller**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/c926922314870ae8d956f22f25ac7502f4ca9708/secop_bd35f_bd50f_bd35k_electronic_unit_101n0212_101n0340_101n0650_12-24vdc_08-2019_desi101e502.pdf)
 
 This project provides a modern, touch-enabled smart UI for your fridge, replacing analog thermostats with precise digital temperature management, dynamic compressor speed control, and built-in battery protection.
 
