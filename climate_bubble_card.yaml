@@ -1,0 +1,85 @@
+# Needs: https://github.com/Clooos/Bubble-Card/
+type: custom:bubble-card
+card_type: climate
+entity: climate.camper_fridge_thermostat
+sub_button:
+  main:
+    - name: HVAC modes menu
+      select_attribute: hvac_modes
+      state_background: false
+      show_arrow: false
+      sub_button_type: select
+    - name: TEMP modes menu
+      select_attribute: preset_modes
+      state_background: false
+      show_arrow: false
+      sub_button_type: select
+      icon: mdi:thermometer
+    - name: FAN modes menu
+      select_attribute: fan_modes
+      state_background: false
+      show_arrow: false
+      sub_button_type: select
+      icon: mdi:cog
+  bottom:
+    - entity: number.smart_camper_fridge_m5dial_temp_target
+      show_state: false
+      show_name: true
+      icon: mdi:thermometer
+      name: Target Temperature
+      sub_button_type: slider
+      show_attribute: false
+      show_last_updated: false
+      force_icon: false
+      scrolling_effect: true
+      show_background: true
+      state_background: true
+      show_last_changed: false
+      tap_to_slide: true
+      read_only_slider: false
+      slider_live_update: false
+      slider_fill_orientation: left
+      invert_slider_value: false
+      always_visible: true
+      fill_width: true
+      show_button_info: true
+      custom_height: 30
+      hide_when_parent_unavailable: false
+      show_icon: true
+    - entity: number.smart_camper_fridge_m5dial_compressor_speed
+      show_state: false
+      show_name: true
+      icon: mdi:cog
+      name: Compressor speed
+      sub_button_type: slider
+      show_attribute: false
+      show_last_updated: false
+      force_icon: false
+      scrolling_effect: true
+      show_background: true
+      state_background: true
+      show_last_changed: false
+      tap_to_slide: true
+      read_only_slider: false
+      slider_live_update: false
+      slider_fill_orientation: left
+      invert_slider_value: false
+      always_visible: true
+      fill_width: true
+      show_button_info: true
+      custom_height: 25
+      hide_when_parent_unavailable: false
+      show_icon: true
+show_icon: true
+show_state: true
+show_last_changed: false
+show_attribute: false
+min_temp: 1
+max_temp: 20
+step: 1
+hide_temperature: false
+state_color: false
+main_buttons_position: bottom
+main_buttons_full_width: true
+rows: 2.313
+name: Smart Fridge
