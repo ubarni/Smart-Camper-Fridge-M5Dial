@@ -1,0 +1,67 @@
+# Needs https://github.com/jcwillox/hass-template-climate (install via HACS)
+climate:
+  - platform: climate_template
+    name: "Camper Fridge Thermostat"
+    unique_id: camper_fridge_thermostat
+    icon: mdi:fridge
+    min_temp: 1
+    max_temp: 20
+
+    # 1. Actual temperature
+    current_temperature_template: "{{ states('sensor.smart_camper_fridge_m5dial_temp_fridge') }}"
+
+    # 2. Target temperature
+    target_temperature_template: "{{ states('number.smart_camper_fridge_m5dial_temp_target') }}"
+    set_temperature:
+      service: number.set_value
+      target:
+        entity_id: number.smart_camper_fridge_m5dial_temp_target
+      data:
+        value: "{{ temperature }}"
+
+    # 3. Modes (Eco, Cold, etc.) as presets
+    preset_mode_template: "{{ states('select.smart_camper_fridge_m5dial_temp_target_mode') }}"
+    preset_modes:
+      - "Fresh"
+      - "Cold"
+      - "Eco"
+      - "Vacation"
+    set_preset_mode:
+      service: select.select_option
+      target:
+        entity_id: select.smart_camper_fridge_m5dial_temp_target_mode
+      data:
+        option: "{{ preset_mode }}"
+
+    # 4. Main switch as (Cool / Off)
+    hvac_mode_template: >
+      {% if is_state('switch.smart_camper_fridge_m5dial_fridge_main_switch', 'on') %}
+        cool
+      {% else %}
+        off
+      {% endif %}
+    modes:
+      - "cool"
+      - "off"
+    set_hvac_mode:
+      service: >
+        {% if hvac_mode == 'cool' %}
+          switch.turn_on
+        {% else %}
+          switch.turn_off
+        {% endif %}
+      target:
+        entity_id: switch.smart_camper_fridge_m5dial_fridge_main_switch
+
+    # 5. Compressor-Modes as Fan Modes
+    fan_mode_template: "{{ states('select.smart_camper_fridge_m5dial_compressor_mode') }}"
+    fan_modes:
+      - "Night"
+      - "Normal"
+      - "Power"
+    set_fan_mode:
+      service: select.select_option
+      target:
+        entity_id: select.smart_camper_fridge_m5dial_compressor_mode
+      data:
+        option: "{{ fan_mode }}"
