@@ -1,0 +1,818 @@
+# Add a view, 3 dots menu -> Edit in Yaml, paste this code
+# Install via HACS: Template Climate (Integration), Bubble Card (Dashboard), Button Card (Dashboard), Lovelace Mini Graph Card (Dashboard), Card Mod 4 (Dashboard)
+# Needs: climate_template.yaml (i.e. as package),
+type: sections
+max_columns: 1
+title: Camper Fridge
+path: camper-fridge
+icon: mdi:fridge
+sections:
+  - type: grid
+    cards:
+      - type: heading
+        icon: mdi:fridge
+        heading: Fridge Control
+        heading_style: subtitle
+        badges:
+          - type: entity
+            show_state: true
+            show_icon: true
+            entity: sensor.smart_fridge_fridge_voltage
+            tap_action:
+              action: more-info
+          - type: entity
+            show_state: true
+            show_icon: true
+            entity: sensor.smart_fridge_fridge_power
+            tap_action:
+              action: more-info
+          - type: entity
+            show_state: true
+            show_icon: true
+            entity: sensor.smart_fridge_fridge_error
+            visibility:
+              - condition: state
+                state_not: OK
+            tap_action:
+              action: more-info
+            color: red
+      - type: custom:mushroom-entity-card
+        entity: sensor.smart_fridge_fridge_error
+        layout: horizontal
+        icon_color: red
+        primary_info: state
+        secondary_info: name
+        name: FRIDGE ERROR
+        card_mod:
+          style: |
+            mushroom-state-info {
+              --card-primary-font-weight: 700;
+              --card-secondary-font-weight: 700;
+              --primary-color: red;
+            }
+        visibility:
+          - condition: state
+            state_not: OK
+      - type: custom:mushroom-entity-card
+        entity: sensor.smart_fridge_startup_lock_remain
+        layout: horizontal
+        icon_color: amber
+        primary_info: name
+        secondary_info: state
+        name: Startup Lock Remain
+        visibility:
+          - condition: numeric_state
+            above: 0
+        card_mod:
+          style: |
+            mushroom-state-info {
+              --card-primary-font-weight: 700;
+              --card-secondary-font-weight: 700;
+              --primary-color: red;
+            }
+      - type: custom:mushroom-entity-card
+        entity: sensor.smart_fridge_fridge_state
+        layout: default
+        icon_color: primary
+        primary_info: state
+        secondary_info: last-changed
+        grid_options:
+          columns: full
+          rows: 1
+        fill_container: false
+        tap_action:
+          action: more-info
+      - type: custom:mushroom-entity-card
+        entity: sensor.smart_fridge_last_setting
+        layout: horizontal
+        icon_color: primary
+        primary_info: state
+        secondary_info: last-changed
+        grid_options:
+          columns: 12
+          rows: 1
+      - type: entities
+        entities:
+          - entity: sensor.smart_fridge_temp_fridge
+            name: Fridge
+            icon: mdi:thermometer
+            card_mod:
+              style: |
+                hui-generic-entity-row {
+                  {% set state = states(config.entity) | float(default=0) %}
+                  {% set state_color = '77, 126, 189' %}
+                  {% set level = states("sensor.smart_fridge_temp_fridge") | int %}
+                  {% set min_state = 5 %}
+                  {% set max_state = 20 %}
+                  {% set critical_state = 15 %}
+                  {% set critical_color = '135, 18, 18' %}
+                  {% set percent = ((state - min_state) / (max_state - min_state) * 100) | round(1) %}
+                  {% set bar_color = state_color if state < critical_state else critical_color %}
+                  background: linear-gradient(
+                    90deg,
+                    rgba({{ bar_color }}, 0.9) 0%,
+                    rgba({{ bar_color }}, 0.9) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.5) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.15) 100%
+                  );
+                }
+          - entity: sensor.smart_fridge_temp_freezer
+            name: Freezer
+            icon: mdi:snowflake
+            card_mod:
+              style: |
+                hui-generic-entity-row {
+                  {% set state = states(config.entity) | float(default=0) %}
+                  {% set state_color = '5, 60, 240' %}
+                  {% set level = states("sensor.smart_fridge_temp_freezer") | int %}
+                  {% set min_state = -20 %}
+                  {% set max_state = 0 %}
+                  {% set critical_state = -2 %}
+                  {% set critical_color = '135, 18, 18' %}
+                  {% set percent = ((state - min_state) / (max_state - min_state) * 100) | round(1) %}
+                  {% set bar_color = state_color if state < critical_state else critical_color %}
+                  background: linear-gradient(
+                    90deg,
+                    rgba({{ bar_color }}, 0.9) 0%,
+                    rgba({{ bar_color }}, 0.9) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.5) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.15) 100%
+                  );
+                }
+          - entity: sensor.smart_fridge_temp_compressor
+            name: Compressor
+            icon: mdi:cog
+            card_mod:
+              style: |
+                hui-generic-entity-row {
+                  {% set state = states(config.entity) | float(default=0) %}
+                  {% set state_color = '240, 135, 7' %}
+                  {% set level = states("sensor.smart_fridge_temp_compressor") | int %}
+                  {% set min_state = 0 %}
+                  {% set max_state = 70 %}
+                  {% set critical_state = 60 %}
+                  {% set critical_color = '135, 18, 18' %}
+                  {% set percent = ((state - min_state) / (max_state - min_state) * 100) | round(1) %}
+                  {% set bar_color = state_color if state < critical_state else critical_color %}
+                  background: linear-gradient(
+                    90deg,
+                    rgba({{ bar_color }}, 0.9) 0%,
+                    rgba({{ bar_color }}, 0.9) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.5) {{ percent }}%,
+                    rgba({{ bar_color }}, 0.15) 100%
+                  );
+                }
+        card_mod:
+          style:
+            hui-sensor-entity-row:
+              $: |
+                hui-generic-entity-row {
+                  height: 30px;
+                  padding: 0px 6px 0px 0px;
+                  border-radius: 8px;
+                }
+                hui-generic-entity-row::after {
+                   font-weight: 400;
+                   font-size: 13px;
+                   text-wrap-mode: nowrap;
+                   color: #b4b4b4;
+                   padding-left: 5px;
+                }
+            .: |
+              .card-content {
+                background:
+                  {% set dark = is_state('binary_sensor.donker_thema','on') %}
+                  {% if not dark %} var(--ha-color) {% endif %};
+              }
+              ha-card {
+                color: white;
+                --card-mod-icon-color: white;
+                --mdc-icon-size: 24px;
+                font-weight: 400;
+              }
+      - type: custom:bubble-card
+        card_type: climate
+        entity: climate.camper_fridge_thermostat
+        sub_button:
+          main:
+            - name: HVAC modes menu
+              select_attribute: hvac_modes
+              state_background: true
+              show_arrow: true
+              sub_button_type: select
+              icon: ""
+            - name: TEMP modes menu
+              select_attribute: preset_modes
+              state_background: false
+              show_arrow: true
+              sub_button_type: select
+              icon: mdi:thermometer
+            - name: FAN modes menu
+              select_attribute: fan_modes
+              state_background: false
+              show_arrow: true
+              sub_button_type: select
+              icon: mdi:cog
+          bottom:
+            - entity: number.smart_fridge_fridge_target_temp
+              show_state: false
+              show_name: true
+              icon: mdi:thermometer
+              name: Target
+              sub_button_type: slider
+              show_attribute: false
+              show_last_updated: false
+              force_icon: false
+              scrolling_effect: true
+              show_background: true
+              state_background: true
+              show_last_changed: false
+              tap_to_slide: true
+              read_only_slider: false
+              slider_live_update: false
+              slider_fill_orientation: left
+              invert_slider_value: false
+              always_visible: true
+              fill_width: true
+              show_button_info: true
+              custom_height: 40
+              hide_when_parent_unavailable: false
+              show_icon: true
+            - entity: number.smart_fridge_compressor_speed
+              show_state: false
+              show_name: true
+              icon: mdi:cog
+              sub_button_type: slider
+              show_attribute: false
+              show_last_updated: false
+              force_icon: false
+              scrolling_effect: true
+              show_background: true
+              state_background: true
+              show_last_changed: false
+              tap_to_slide: true
+              read_only_slider: false
+              slider_live_update: false
+              slider_fill_orientation: left
+              invert_slider_value: false
+              always_visible: true
+              fill_width: true
+              show_button_info: true
+              custom_height: 40
+              hide_when_parent_unavailable: false
+              show_icon: true
+              name: Speed
+        show_icon: true
+        show_state: true
+        show_last_changed: false
+        show_attribute: false
+        min_temp: 1
+        max_temp: 20
+        step: 1
+        hide_temperature: false
+        state_color: false
+        main_buttons_position: bottom
+        main_buttons_full_width: true
+        rows: 2.469
+        name: Smart Fridge
+        show_last_updated: false
+        card_mod:
+          style: |
+            .bubble-sub-button-1 {
+              background-color: black !important;
+            }
+            .bubble-sub-button-2 {
+              background-color: #4d7ebd !important;
+            }
+            .bubble-sub-button-3 {
+              background-color: 
+                {% if is_state('switch.smart_fridge_compressor_state', 'on') %}
+                  #f08707
+                {% else %}
+                  #ad7d03
+                {% endif %}
+              !important;
+            }
+
+            .bubble-sub-button-slider-4 .bubble-range-fill {
+              background-color: #4d7ebd !important;
+            }
+            .bubble-sub-button-slider-5 .bubble-range-fill {
+              background-color: 
+                {% if is_state('switch.smart_fridge_compressor_state', 'on') %}
+                  #f08707
+                {% else %}
+                  #ad7d03
+                {% endif %}
+              !important;
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            entity: switch.smart_fridge_fridge_main_switch
+            icon: mdi:toggle-switch-variant-off
+            name: Switch
+            show_name: false
+            tap_action:
+              action: toggle
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "on") return '#06aa6d';
+                    ]]]    
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 44px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_temp_target_mode
+            icon: mdi:snowflake
+            name: Fresh
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_temp_target_mode
+              data:
+                option: Fresh
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      if (states["select.smart_fridge_temp_target_mode"].state == "Fresh") return '#4d7ebd';
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_temp_target_mode
+            icon: mdi:thermometer-low
+            name: Cold
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_temp_target_mode
+              data:
+                option: Cold
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      if (states["select.smart_fridge_temp_target_mode"].state == "Cold") return '#4d7ebd';
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_temp_target_mode
+            icon: mdi:thermometer-high
+            name: Eco
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_temp_target_mode
+              data:
+                option: Eco
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      if (states["select.smart_fridge_temp_target_mode"].state == "Eco") return '#4d7ebd';
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_temp_target_mode
+            icon: mdi:island
+            name: Vac
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_temp_target_mode
+              data:
+                option: Vacation
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      if (states["select.smart_fridge_temp_target_mode"].state == "Vacation") return '#4d7ebd';
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]] 
+          - type: custom:button-card
+            entity: select.smart_fridge_compressor_mode
+            icon: mdi:moon-waxing-crescent
+            name: Night
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_compressor_mode
+              data:
+                option: Night
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
+                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const isActive = entity.state === 'Night';
+
+                      // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
+                      if (!isActive) {
+                        return 'var(--card-background-color)';
+                      }
+
+                      // Ab hier IST mode = "Night"
+                      if (mainSwitch === 'off') {
+                        return 'grey'; // Kühlschrank aus
+                      } else {
+                        return compressor === 'on' ? '#f08707' : '#ad7d03'; // Kühlschrank an (Kompressor an/aus)
+                      }
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_compressor_mode
+            icon: mdi:ice-cream
+            name: Norm
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_compressor_mode
+              data:
+                option: Normal
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
+                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const isActive = entity.state === 'Normal';
+
+                      // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
+                      if (!isActive) {
+                        return 'var(--card-background-color)';
+                      }
+
+                      // Ab hier IST mode = "Night"
+                      if (mainSwitch === 'off') {
+                        return 'grey'; // Kühlschrank aus
+                      } else {
+                        return compressor === 'on' ? '#f08707' : '#ad7d03'; // Kühlschrank an (Kompressor an/aus)
+                      }
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+          - type: custom:button-card
+            entity: select.smart_fridge_compressor_mode
+            icon: mdi:flash
+            name: Powr
+            tap_action:
+              action: call-service
+              service: select.select_option
+              target:
+                entity_id: select.smart_fridge_compressor_mode
+              data:
+                option: Power
+            styles:
+              card:
+                - background-color: |
+                    [[[
+                      const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
+                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const isActive = entity.state === 'Power';
+
+                      // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
+                      if (!isActive) {
+                        return 'var(--card-background-color)';
+                      }
+
+                      // Ab hier IST mode = "Night"
+                      if (mainSwitch === 'off') {
+                        return 'grey'; // Kühlschrank aus
+                      } else {
+                        return compressor === 'on' ? '#f08707' : '#ad7d03'; // Kühlschrank an (Kompressor an/aus)
+                      }
+                    ]]]    
+              name:
+                - font-size: 15px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                    ]]]    
+              icon:
+                - height: 25px
+                - color: |
+                    [[[
+                      if (states["switch.smart_fridge_fridge_main_switch"].state == "off") return  '#3a3a3a';
+                      else 'white'
+                    ]]]    
+        grid_options:
+          columns: 12
+          rows: auto
+      - type: heading
+        icon: mdi:fridge-top
+        heading: Freezer Guard
+        heading_style: subtitle
+      - type: custom:button-card
+        entity: switch.smart_fridge_freezer_guard_mode
+        icon: mdi:toggle-switch-variant-off
+        name: Switch
+        show_name: false
+        section_mode: true
+        tap_action:
+          action: toggle
+        styles:
+          card:
+            - background-color: |
+                [[[
+                  if (states["switch.smart_fridge_freezer_guard_mode"].state == "on") return '#06aa6d';
+                ]]]    
+            - color: |
+                [[[
+                  if (states["switch.smart_fridge_freezer_guard_mode"].state == "off") return  '#3a3a3a';
+                ]]]    
+          name:
+            - font-size: 15px
+            - color: |
+                [[[
+                  if (states["switch.smart_fridge_freezer_guard_mode"].state == "off") return  '#3a3a3a';
+                ]]]    
+          icon:
+            - height: 35px
+            - color: |
+                [[[
+                  if (states["switch.smart_fridge_freezer_guard_mode"].state == "off") return  '#3a3a3a';
+                  else 'white'
+                ]]]
+        grid_options:
+          columns: 2
+          rows: 1
+      - type: custom:mushroom-number-card
+        entity: number.smart_fridge_freezer_target_temp
+        layout: horizontal
+        name: Freezer target
+        icon_color: blue
+        grid_options:
+          columns: 10
+          rows: 1
+      - type: custom:mini-graph-card
+        height: 100
+        line_width: 2
+        hours_to_show: 1
+        points_per_hour: 60
+        decimals: 1
+        show:
+          icon: false
+          name: false
+          legend: false
+          labels: true
+        entities:
+          - entity: sensor.smart_fridge_temp_fridge
+            name: Kühlraum
+            color: "#00e5ff"
+            show_state: true
+            show_indicator: true
+            state_adaptive_color: true
+          - entity: sensor.smart_fridge_temp_freezer
+            name: Gefrierfach
+            color: blue
+            show_state: true
+            show_indicator: true
+            state_adaptive_color: true
+          - entity: sensor.smart_fridge_temp_compressor
+            name: Kompressor
+            color: "#ffa726"
+            show_state: true
+            show_indicator: true
+            state_adaptive_color: true
+  - type: grid
+    cards:
+      - type: heading
+        icon: mdi:fridge
+        heading: Temperature Presets
+        heading_style: subtitle
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: number.smart_fridge_temp_preset_fresh
+            name: Fresh
+          - entity: number.smart_fridge_temp_preset_cold
+            icon: ""
+            name: Cold
+          - entity: number.smart_fridge_temp_preset_eco
+            name: Eco
+          - entity: number.smart_fridge_temp_preset_vacation
+            name: Vacation
+        card_mod:
+          style: |
+            .card-content > * {
+              margin-top: -10px !important;
+              margin-bottom: -10px !important;
+            }
+            .card-content {
+              padding-top: 4px !important;
+              padding-bottom: 4px !important;
+            }
+        grid_options:
+          rows: 2
+          columns: 12
+      - type: heading
+        icon: mdi:fridge
+        heading: Compressor Presets
+        heading_style: subtitle
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: number.smart_fridge_compressor_preset_night
+            name: Night
+          - entity: number.smart_fridge_compressor_preset_normal
+            icon: ""
+            name: Normal
+          - entity: number.smart_fridge_compressor_preset_power
+            name: Power
+        card_mod:
+          style: |
+            .card-content > * {
+              margin-top: -10px !important;
+              margin-bottom: -10px !important;
+            }
+            .card-content {
+              padding-top: 4px !important;
+              padding-bottom: 4px !important;
+            }
+        grid_options:
+          rows: 1.6
+          columns: 12
+      - type: heading
+        icon: mdi:fridge-top
+        heading: Freezer Guard
+        heading_style: subtitle
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: switch.smart_fridge_freezer_guard_mode
+            name: Freezer Guard
+          - entity: number.smart_fridge_freezer_target_temp
+            name: Freezer Target
+        card_mod:
+          style: |
+            .card-content > * {
+              margin-top: -10px !important;
+              margin-bottom: -10px !important;
+            }
+            .card-content {
+              padding-top: 4px !important;
+              padding-bottom: 4px !important;
+            }
+        grid_options:
+          rows: 1
+          columns: 12
+      - type: heading
+        icon: mdi:fridge
+        heading: Configuration
+        heading_style: subtitle
+      - type: entities
+        entities:
+          - entity: light.smart_fridge_display_backlight
+            name: Display
+          - entity: number.smart_fridge_hysteresis
+            name:
+              type: entity
+          - entity: number.smart_fridge_startup_lock_duration
+            name:
+              type: entity
+          - entity: sensor.smart_fridge_startup_lock_remain
+            name:
+              type: entity
+          - entity: number.smart_fridge_low_voltage_cutoff
+            name: Low Voltage CutOff
+          - entity: number.smart_fridge_calibration_voltage_multiplier
+            name: Voltage Multiplier
+        grid_options:
+          rows: auto
+          columns: 12
+        card_mod:
+          style: |
+            .card-content > * {
+              margin-top: -10px !important;
+              margin-bottom: -10px !important;
+            }
+            .card-content {
+              padding-top: 4px !important;
+              padding-bottom: 4px !important;
+            }
+      - type: heading
+        icon: mdi:fridge
+        heading: System Status
+        heading_style: subtitle
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: sensor.smart_fridge_wifi_signal_strength
+            name: WiFi Signal
+          - entity: sensor.smart_fridge_wifi_signal_db
+            name: WiFi Signal DB
+          - entity: sensor.smart_fridge_ip_address
+            icon: mdi:ip-network
+            name: IP Address
+          - entity: sensor.smart_fridge_mac_address
+            name: MAC Address
+        grid_options:
+          rows: 2
+          columns: 12
+        card_mod:
+          style: |
+            .card-content > * {
+              margin-top: -10px !important;
+              margin-bottom: -10px !important;
+            }
+            .card-content {
+              padding-top: 4px !important;
+              padding-bottom: 4px !important;
+            }
+cards: []
+header: {}
