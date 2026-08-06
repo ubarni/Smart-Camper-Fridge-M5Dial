@@ -9,8 +9,9 @@ This project provides a modern, touch-enabled smart UI for your fridge, replacin
 https://github.com/user-attachments/assets/c929fbea-1178-4309-9948-f9e8a38f8adf
 
 ## Screenshot Home Assistant
-Install via HACS: Template Climate (Integration), Bubble Card (Dashboard), Button Card (Dashboard), Lovelace Mini Graph Card (Dashboard)
-Needs: climate_template.yaml (i.e. as package), 
+[**Smart Fridge (View)**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/3c6792e76c0abe57d38a256c658d0e316bda5d45/smart_fridge_view.yaml)
+Install via HACS: Template Climate (Integration), Bubble Card (Dashboard), Button Card (Dashboard), Lovelace Mini Graph Card (Dashboard), Card Mod 4 (Dashboard)
+Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/3c6792e76c0abe57d38a256c658d0e316bda5d45/climate_template.yaml)
 <img width="949" height="741" alt="Bildschirmfoto 2026-08-06 um 20 25 00" src="https://github.com/user-attachments/assets/92de0c28-bf5e-4b89-9b67-f3c650477fde" />
 
 ## ✨ Features
