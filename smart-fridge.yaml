@@ -1,6 +1,6 @@
 substitutions:
-  name: "smart-camper-fridge-m5dial"
-  friendly_name: "Smart Camper Fridge M5Dial"
+  name: smart-fridge
+  friendly_name: "Smart Fridge"
   
   # External pins via M5Dial Grove connectors
   pwm_pin:        "GPIO15" # Port A Yellow (PWM output to SECOP controller)
@@ -44,11 +44,11 @@ ota:
     
 wifi:
   networks:
-    - ssid: !secret wifi_ssid_ssid
-      password: !secret wifi_ssid_password
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
       priority: 1
-    - ssid: !secret wifi_backup_ssid_ssid
-      password: !secret wifi_backup_ssid_password
+    - ssid: !secret wifi_backup_ssid
+      password: !secret wifi_backup_password
       priority: 10
   fast_connect: false
   power_save_mode: none
@@ -78,7 +78,7 @@ globals:
     initial_value: '0'
   - id: ui_mode
     type: int
-    initial_value: '0'     # 0 = Temp (Blue), 1 = Speed (Orange), 2 = Brightness (Yellow)
+    initial_value: '0'     # 0 = Temp (Blue), 1 = Speed (Orange), 2 = Brightness (Yellow), 3 = Freezer Guard (Cyan)
   - id: lower_display_page
     type: int
     initial_value: '0'     # 0 = All Temperatures, 1 = Power & Battery
@@ -277,8 +277,8 @@ sensor:
     on_clockwise:
       - lambda: |-
           if (id(ui_mode) == 0) {
-            float next_val = id(target_temp).state + 1.0f;
-            if (next_val <= 20.0f) id(target_temp).make_call().set_value(next_val).perform();
+            float next_val = id(fridge_target_temp).state + 1.0f;
+            if (next_val <= 20.0f) id(fridge_target_temp).make_call().set_value(next_val).perform();
           } else if (id(ui_mode) == 1) {
             float next_val = id(compressor_speed_pct).state + 1.0f;
             if (next_val <= 100.0f) id(compressor_speed_pct).make_call().set_value(next_val).perform();
@@ -292,8 +292,8 @@ sensor:
     on_anticlockwise:
       - lambda: |-
           if (id(ui_mode) == 0) {
-            float next_val = id(target_temp).state - 1.0f;
-            if (next_val >= 1.0f) id(target_temp).make_call().set_value(next_val).perform();
+            float next_val = id(fridge_target_temp).state - 1.0f;
+            if (next_val >= 1.0f) id(fridge_target_temp).make_call().set_value(next_val).perform();
           } else if (id(ui_mode) == 1) {
             float next_val = id(compressor_speed_pct).state - 1.0f;
             if (next_val >= 0.0f) id(compressor_speed_pct).make_call().set_value(next_val).perform();
@@ -366,7 +366,7 @@ number:
   - platform: template
     name: "Low Voltage Cutoff"
     id: low_voltage_cutoff
-    entity_category: config
+    entity_category: "config"
     min_value: 9.0
     max_value: 26.0
     step: 0.1
@@ -385,7 +385,7 @@ number:
   - platform: template
     name: "Compressor Preset Night"
     id: compressor_preset_night
-    entity_category: config
+    entity_category: "config"
     min_value: 10
     max_value: 100
     step: 1
@@ -397,7 +397,7 @@ number:
   - platform: template
     name: "Compressor Preset Normal"
     id: compressor_preset_normal
-    entity_category: config
+    entity_category: "config"
     min_value: 10
     max_value: 100
     step: 1
@@ -409,7 +409,7 @@ number:
   - platform: template
     name: "Compressor Preset Power"
     id: compressor_preset_power
-    entity_category: config
+    entity_category: "config"
     min_value: 10
     max_value: 100
     step: 1
@@ -422,7 +422,7 @@ number:
   - platform: template
     name: "Temp Preset Cold"
     id: temp_preset_cold
-    entity_category: config
+    entity_category: "config"
     min_value: 0
     max_value: 20
     step: 1
@@ -434,7 +434,7 @@ number:
   - platform: template
     name: "Temp Preset Fresh"
     id: temp_preset_fresh
-    entity_category: config
+    entity_category: "config"
     min_value: 0
     max_value: 20
     step: 1
@@ -446,7 +446,7 @@ number:
   - platform: template
     name: "Temp Preset Eco"
     id: temp_preset_eco
-    entity_category: config
+    entity_category: "config"
     min_value: 0
     max_value: 20
     step: 1
@@ -458,7 +458,7 @@ number:
   - platform: template
     name: "Temp Preset Vacation"
     id: temp_preset_vacation
-    entity_category: config
+    entity_category: "config"
     min_value: 0
     max_value: 20
     step: 1
@@ -468,8 +468,8 @@ number:
     unit_of_measurement: "°C"
 
   - platform: template
-    name: "Temp Target"
-    id: target_temp
+    name: "Fridge Target Temp"
+    id: fridge_target_temp
     unit_of_measurement: "°C"
     min_value: 1
     max_value: 20  
@@ -492,8 +492,8 @@ number:
           else if (val == (int)round(id(temp_preset_vacation).state)) mode = "Vacation";
 
           // Update the dropdown menu if the mode has changed
-          if (id(target_temp_select).current_option() != mode) {
-            auto call = id(target_temp_select).make_call();
+          if (id(fridge_target_temp_select).current_option() != mode) {
+            auto call = id(fridge_target_temp_select).make_call();
             call.set_option(mode);
             call.perform();
           }
@@ -531,7 +531,7 @@ number:
     initial_value: 1.5
     restore_value: true
     optimistic: true
-    entity_category: config
+    entity_category: "config"
     on_value:
       - lambda: |-
           char buf[64];
@@ -549,7 +549,7 @@ number:
     restore_value: true
     optimistic: true
     icon: "mdi:timer-cog"
-    entity_category: config
+    entity_category: "config"
     on_value:
       - lambda: |-
           char buf[64];
@@ -559,7 +559,7 @@ number:
   - platform: template
     name: "Calibration: Voltage-Multiplier"
     id: volt_multiplier
-    entity_category: config
+    entity_category: "config"
     min_value: 1.0
     max_value: 10.0
     step: 0.01
@@ -570,7 +570,7 @@ number:
 select:
   - platform: template
     name: "Temp Target Mode"
-    id: target_temp_select
+    id: fridge_target_temp_select
     options: ["Cold", "Fresh", "Eco", "Vacation", "Manually"]
     initial_option: "Cold"
     restore_value: true
@@ -585,11 +585,11 @@ select:
           else if (x == "Vacation")  val = id(temp_preset_vacation).state;
           
           if (val > 0.0f) { 
-            id(target_temp).make_call().set_value(val).perform();
+            id(fridge_target_temp).make_call().set_value(val).perform();
           }
           // --- Log entry ---
           char buf[64];
-          sprintf(buf, "Temp Mode: %s (%.0f°C)", x.c_str(), val);
+          sprintf(buf, "Fridge Mode: %s (%.0f°C)", x.c_str(), val);
           id(fridge_settings_log).publish_state(buf);
 
   - platform: template
@@ -727,11 +727,11 @@ binary_sensor:
               if (!id(fridge_main_switch).state) return; 
               
               if (id(ui_mode) == 0) {
-                size_t next_idx = (id(target_temp_select).active_index().value_or(0) + 1) % 4;
+                size_t next_idx = (id(fridge_target_temp_select).active_index().value_or(0) + 1) % 4;
                 float val = (next_idx == 0) ? id(temp_preset_cold).state : 
                             (next_idx == 1) ? id(temp_preset_fresh).state : 
                             (next_idx == 2) ? id(temp_preset_eco).state : id(temp_preset_vacation).state;
-                if (val > 0.0f) id(target_temp_select).make_call().set_index(next_idx).perform();
+                if (val > 0.0f) id(fridge_target_temp_select).make_call().set_index(next_idx).perform();
 
               } else if (id(ui_mode) == 1) {
                 size_t next_index = (id(compressor_mode_select).active_index().value_or(0) + 1) % 3; 
@@ -798,7 +798,7 @@ switch:
     name: "Compressor State"
     id: compressor_state
     optimistic: true
-    entity_category: diagnostic
+    entity_category: "diagnostic"
     on_turn_off:
       - script.stop: compressor_start_routine
       - lambda: 'id(secop_pwm_output).set_level(0.0f);'
@@ -886,7 +886,7 @@ display:
       
       float pct = 0.0f;
       if (id(ui_mode) == 0) {
-        float t_target = id(target_temp).state;
+        float t_target = id(fridge_target_temp).state;
         if (!std::isnan(t_target)) pct = (t_target - 1.0f) / 19.0f; 
       } else if (id(ui_mode) == 1) {
         float s_target = id(compressor_speed_pct).state;
@@ -931,7 +931,7 @@ display:
         it.printf(120, 44, id(font_medium), c_cyan, TextAlign::CENTER, "Freezer");
       } else {
         std::string t_mode = "Manual";
-        float top_t_target = id(target_temp).state;
+        float top_t_target = id(fridge_target_temp).state;
         if (!std::isnan(top_t_target)) {
           if (top_t_target == id(temp_preset_cold).state && id(temp_preset_cold).state > 0.0f)              t_mode = "Cold";
           else if (top_t_target == id(temp_preset_fresh).state && id(temp_preset_fresh).state > 0.0f)       t_mode = "Fresh";
@@ -960,7 +960,7 @@ display:
         it.printf(120, 132, id(font_small), c_red, TextAlign::CENTER, "%s", err_sub.c_str());
       } else {
       if (id(ui_mode) == 0) {
-          float t_target = id(target_temp).state;
+          float t_target = id(fridge_target_temp).state;
           if (!std::isnan(t_target)) {
             // Completely static and perfectly centered! No shifting.
             it.printf(120, 90, id(font_huge), c_blue, TextAlign::CENTER, "%.0f°", t_target); 
@@ -1060,19 +1060,18 @@ display:
         if (!std::isnan(f_temp)) {
           Color f_text_color = c_white;
           
-          float t_target = id(target_temp).state;
+          float t_target = id(fridge_target_temp).state;
           if (std::isnan(t_target)) t_target = 5.0f;
           
           bool comp_running = id(compressor_state).state;
           
-          // NEU: Vergleicht die auf Ganzzahlen gerundeten Werte
           if (roundf(f_temp) <= roundf(t_target)) {
             f_text_color = c_green;   // GREEN: Round(actual) <= Target (10.5° -> 10° -> Green)
           } else {
             if (comp_running) {
-              f_text_color = c_red;     // RED: To warm AND compressor running
+              f_text_color = c_red;     // RED: Too warm AND compressor running
             } else {
-              f_text_color = c_yellow;  // YELLOW: To warm AND compressor NOT running (Hysteresis or Locktime)
+              f_text_color = c_yellow;  // YELLOW: Too warm AND compressor NOT running (Hysteresis or Locktime)
             }
           }
           
@@ -1098,9 +1097,9 @@ display:
               fz_text_color = c_green;   // GREEN: Round(actual) <= Target (-4.8° -> -5° -> Green)
             } else {
               if (comp_running) {
-                fz_text_color = c_red;     // RED: To warm AND compressor running
+                fz_text_color = c_red;     // RED: Too warm AND compressor running
               } else {
-                fz_text_color = c_yellow;  // YELLOW: To warm AND compressor NOT running (Hysteresis or Locktime)
+                fz_text_color = c_yellow;  // YELLOW: Too warm AND compressor NOT running (Hysteresis or Locktime)
               }
             }
           }
@@ -1110,7 +1109,6 @@ display:
         }
 
         // Column 3: Compressor
-        // Icon und Temperatur leuchten orange, wenn der Kompressor läuft, sonst grau
         bool comp_running = id(compressor_state).state;
         Color comp_ui_color = comp_running ? c_orange : c_gray;
 
@@ -1222,7 +1220,7 @@ script:
 
           // --- 2. SENSOR FAILSAFE ---
           float current_t = id(fridge_temp).state;
-          float target_t = id(target_temp).state;
+          float target_t = id(fridge_target_temp).state;
           float hyst = id(fridge_hysteresis).state;
           
           if (std::isnan(target_t)) target_t = 5.0f;
@@ -1244,25 +1242,25 @@ script:
           // --- 3. TEMPERATURE LOGIC (DUAL SENSOR: FRIDGE & FREEZER GUARD) ---
           bool comp_on = id(compressor_state).state;
 
-          // Freezer-Werte einlesen
+          // Freezervalues
           float fz_temp = id(freezer_temp).state;
           float fz_target = id(freezer_target_temp).state;
           bool fz_guard_active = id(freezer_guard_mode).state;
 
           if (std::isnan(fz_target)) fz_target = -10.0f;
 
-          // Failsafe: Wenn der Freezer-Sensor fehlt, wird der Guard ignoriert
+          // Failsafe: If Freezer-Sensor missing Guard ignored
           if (fz_guard_active && std::isnan(fz_temp)) {
-            ESP_LOGW("fridge_logic", "Freezer Guard aktiv, aber Sensorwert ist NAN! Ignoriere Freezer Guard.");
+            ESP_LOGW("fridge_logic", "Freezer Guard active, but sensorvalue is NAN! Ignored Freezer Guard.");
             fz_guard_active = false;
           }
 
-          // Auswertung Hauptraum (Fridge)
+          // Fridge
           bool fridge_needs_cooling = (current_t >= (target_t + hyst));
           bool fridge_satisfied = (current_t <= target_t);
 
           bool freezer_needs_cooling = false;
-          bool freezer_satisfied = true; // Standardmäßig true, blockiert nichts, wenn Modus OFF ist
+          bool freezer_satisfied = true;
 
           if (fz_guard_active) {
             freezer_needs_cooling = (fz_temp >= (fz_target + hyst));
@@ -1277,15 +1275,15 @@ script:
             if (!comp_on) {
               if (id(last_compressor_stop) != 0 && (now - id(last_compressor_stop) < lock_ms)) {
                 int wait_sec = (lock_ms - (now - id(last_compressor_stop))) / 1000;
-                ESP_LOGW("fridge_logic", "Zu warm, aber Start blockiert durch Locktime! %ds warten", wait_sec);
-                id(fridge_state_log).publish_state("Start blockiert (Locktime)");
+                ESP_LOGW("fridge_logic", "Too warm, but start blocked by Locktime! %ds waiting", wait_sec);
+                id(fridge_state_log).publish_state("Start blocked (Locktime)");
               } else {
                 if (freezer_needs_cooling && !fridge_needs_cooling) {
-                  ESP_LOGI("fridge_logic", "Freezer zu warm (%.1f°C)! Starte Kompressor...", fz_temp);
-                  id(fridge_state_log).publish_state("Freezer Guard: Starte...");
+                  ESP_LOGI("fridge_logic", "Freezer too warm (%.1f°C)! Compressor starting...", fz_temp);
+                  id(fridge_state_log).publish_state("Freezer Guard: Starting...");
                 } else {
-                  ESP_LOGI("fridge_logic", "Fridge zu warm (%.1f°C)! Starte Kompressor...", current_t);
-                  id(fridge_state_log).publish_state("Kühlschrank kühlt...");
+                  ESP_LOGI("fridge_logic", "Fridge too warm (%.1f°C)! Compressor starting...", current_t);
+                  id(fridge_state_log).publish_state("Fridge cooling...");
                 }
                 id(compressor_start_routine).execute();
               }
@@ -1296,8 +1294,8 @@ script:
             if (comp_on) {
               id(compressor_state).turn_off();
               id(last_compressor_stop) = now; 
-              id(fridge_state_log).publish_state("Standby (Ziele erreicht)");
-              ESP_LOGI("fridge_logic", "Alle Zieltemperaturen erreicht. Kompressor auf Standby.");
+              id(fridge_state_log).publish_state("Standby (All targets reached)");
+              ESP_LOGI("fridge_logic", "Standby (All targets reached)");
             }
           }
           
