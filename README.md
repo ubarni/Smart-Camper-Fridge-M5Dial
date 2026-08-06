@@ -19,6 +19,7 @@ Needs: climate_template.yaml (i.e. as package), climate_bubble_card.yaml in dash
 
 * **Modern Touch UI & Rotary Encoder:** Intuitive control over temperature and compressor speeds using the M5Dial's rotating bezel and round touch screen.
 * **Intelligent Compressor Control:** Variable PWM speed control allows you to run the compressor in `Night` (Quiet/Slow), `Normal`, or `Power` (Fast cooling) modes.
+* **Dual-Zone "Freezer Guard" Mode:** Single-compressor RV refrigerators share a single cooling circuit between the main compartment and the freezer. When the Freezer Guard Mode is ON the compressor logic reacts on fridge AND freezer target temperatures. 
 * **Smart Soft-Start:** Gently spins up the compressor to reduce mechanical wear and voltage drops.
 * **Low Voltage Disconnect (LVD):** Monitors battery voltage and safely shuts down the fridge before your camper's battery is depleted (Configurable via Home Assistant).
 * **Failsafe Mechanisms:** Prevents infinite compressor loops if a temperature sensor fails or gets disconnected.
@@ -95,9 +96,10 @@ The M5Dial offers a highly intuitive, tactile interface using its rotary encoder
 
 ### 🔄 Rotary Ring (Bezel)
 Turning the physical outer ring allows you to manually adjust the target value of the currently active mode:
-* **In Temperature Mode:** Adjusts the target temperature (1°C to 20°C).
+* **In Temperature Mode:** Adjusts the fridge target temperature (1°C to 20°C).
 * **In Compressor Mode:** Adjusts the compressor speed limit (0% to 100%).
 * **In Brightness Mode:** Adjusts the screen backlight intensity (10% to 100%).
+* **In Freezer Guard Mode:** Adjusts the freezer target temperature (0°C to -20°C).
 * *Note: Manually turning the dial will instantly switch the active preset to "Manual" (unless the exact value matches a predefined preset).*
 
 ### 👆 Touch Screen Gestures
@@ -106,15 +108,41 @@ Turning the physical outer ring allows you to manually adjust the target value o
   * *Page 1:* Sensor Temperatures (Fridge, Freezer, Compressor).
   * *Page 2:* Energy & Connectivity (Power Draw in Watts, Battery Voltage, WiFi Signal Strength).
 
-### 🔘 Physical Button (Pressing the Screen)
-The entire screen of the M5Dial acts as a physical push button, enabling quick preset changes without looking:
+### 🔘 Physical Button (Below the Screen)
+Below the screen of the M5Dial is a physical push button, enabling quick preset changes without looking:
 * **Single Click:** Cycles through your configured presets for the currently active mode.
   * *In Temperature Mode:* Cold -> Fresh -> Eco -> Vacation -> ...
   * *In Compressor Mode:* Night -> Normal -> Power -> ...
   * *In Brightness Mode:* 30% -> 70% -> 100% -> ...
+  * *In Freezer Guard Mode:* ON -> OFF -> ...
 * **Double Click:** Cycles through the three main UI modes (serves as a tactile alternative to tapping the center screen).
 * **Long Press (Hold for 1s):** Main Power Switch. Turns the entire fridge system (and the display) ON or OFF (Standby).
 
+---
+
+### 🎨 Dynamic UI Color Concept
+
+The bottom section of the M5Dial display features a color-coded status bar for visual monitoring at a glance:
+
+* **🟦 Fridge (Left Column)**
+  * **Icon**: Always **Blue** 🔵
+  * 🟢 **Green**: Target temperature reached
+  * 🟡 **Yellow**: Above target, but compressor is off (within hysteresis window or locked by delay timer)
+  * 🔴 **Red**: Above target **AND** compressor is actively cooling
+
+* **🧊 Freezer (Center Column)**
+  * **Icon**: **Cyan** 🧊 when Guard is **ON** | **Gray** ⚪ when Guard is **OFF**
+  * **Status (Guard ON)**:
+    * 🟢 **Green**: Freezer target temperature reached
+    * 🟡 **Yellow**: Above target, compressor waiting
+    * 🔴 **Red**: Above target **AND** compressor actively cooling
+  * **Status (Guard OFF)**:
+    * ⚪ **White**: Neutral display
+
+* **⚙️ Compressor (Right Column)**
+  * **Icon & Text**: 
+    * 🟠 **Orange**: Compressor is running
+    * ⚪ **Gray**: Compressor is in standby
 ---
 
 ## UI Calibration Guide
