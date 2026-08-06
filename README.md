@@ -9,11 +9,9 @@ This project provides a modern, touch-enabled smart UI for your fridge, replacin
 https://github.com/user-attachments/assets/c929fbea-1178-4309-9948-f9e8a38f8adf
 
 ## Screenshot Home Assistant
-<img width="1063" height="858" alt="Bildschirmfoto 2026-07-29 um 21 31 03" src="https://github.com/user-attachments/assets/0ed21991-6cd3-4f77-aba5-3ce099350175" />
-
-## Climate Card
-Needs: climate_template.yaml (i.e. as package), climate_bubble_card.yaml in dashboard
-<img width="511" height="153" alt="Bildschirmfoto 2026-08-01 um 22 54 23" src="https://github.com/user-attachments/assets/d0262bf5-d725-48f2-b668-81953448feab" />
+Install via HACS: Template Climate (Integration), Bubble Card (Dashboard), Button Card (Dashboard), Lovelace Mini Graph Card (Dashboard)
+Needs: climate_template.yaml (i.e. as package), 
+<img width="949" height="741" alt="Bildschirmfoto 2026-08-06 um 20 25 00" src="https://github.com/user-attachments/assets/92de0c28-bf5e-4b89-9b67-f3c650477fde" />
 
 ## ✨ Features
 
