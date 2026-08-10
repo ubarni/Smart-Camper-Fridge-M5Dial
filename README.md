@@ -170,6 +170,11 @@ You can configure the exact PWM output limits (0-100%) for the different compres
 * **Compressor Preset Normal:** Standard operation (Default `50%`)
 * **Compressor Preset Power:** Fast cooling (Default `80%`)
 
+### Voltage Calibration
+To calibrate the voltage you need two measurements:
+* **1. Voltage when battery is full:** Use the Voltage-Multiplier slider until the shown voltage corresponds to the measured voltage
+* **2. Voltage when battery is empty:** Use the Voltage-Offset slider until the shown voltage corresponds to the measured voltage
+
 ### Hardware Calibration
 * **Voltage-Multiplier:** Adjusts the ADC reading to match your physical voltage divider circuit. Measure your battery with a multimeter and adjust this multiplier until the M5Dial matches the real voltage.
 * **Sensor Assignment:** The system uses 3 physical DS18B20 OneWire sensors. Since OneWire addresses can change, you can dynamically assign which index (`Index 0`, `Index 1`, `Index 2`) corresponds to the `Fridge`, `Freezer`, or `Compressor` directly via Home Assistant dropdown menus!
