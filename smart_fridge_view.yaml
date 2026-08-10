@@ -286,7 +286,7 @@ sections:
             }
             .bubble-sub-button-3 {
               background-color: 
-                {% if is_state('switch.smart_fridge_compressor_state', 'on') %}
+                {% if is_state('binary_sensor.smart_fridge_compressor_running', 'on') %}
                   #f08707
                 {% else %}
                   #ad7d03
@@ -299,7 +299,7 @@ sections:
             }
             .bubble-sub-button-slider-5 .bubble-range-fill {
               background-color: 
-                {% if is_state('switch.smart_fridge_compressor_state', 'on') %}
+                {% if is_state('binary_sensor.smart_fridge_compressor_running', 'on') %}
                   #f08707
                 {% else %}
                   #ad7d03
@@ -474,7 +474,7 @@ sections:
                 - background-color: |
                     [[[
                       const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
-                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const compressor = states['binary_sensor.smart_fridge_compressor_running']?.state;
                       const isActive = entity.state === 'Night';
 
                       // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
@@ -518,7 +518,7 @@ sections:
                 - background-color: |
                     [[[
                       const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
-                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const compressor = states['binary_sensor.smart_fridge_compressor_running']?.state;
                       const isActive = entity.state === 'Normal';
 
                       // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
@@ -562,7 +562,7 @@ sections:
                 - background-color: |
                     [[[
                       const mainSwitch = states['switch.smart_fridge_fridge_main_switch']?.state;
-                      const compressor = states['switch.smart_fridge_compressor_state']?.state;
+                      const compressor = states['binary_sensor.smart_fridge_compressor_running']?.state;
                       const isActive = entity.state === 'Power';
 
                       // Wenn der Modus NICHT "Night" ist -> immer Standard-Hintergrund
