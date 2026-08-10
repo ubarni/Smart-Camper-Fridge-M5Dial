@@ -680,6 +680,15 @@ text_sensor:
       entity_category: "diagnostic"
 
 binary_sensor:
+
+  - platform: template
+    name: "Compressor Running"
+    id: compressor_running
+    device_class: running
+    entity_category: "diagnostic"
+    lambda: |-
+      return id(compressor_state).state;
+      
   - platform: gpio
     pin:
       number: ${diag_pin}
@@ -808,6 +817,7 @@ switch:
   - platform: template
     name: "Compressor State"
     id: compressor_state
+    internal: true
     optimistic: true
     entity_category: "diagnostic"
     on_turn_off:
