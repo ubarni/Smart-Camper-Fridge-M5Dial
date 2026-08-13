@@ -6,7 +6,7 @@ Tested with [**WAECO Coolmatic MDC-090K**](https://github.com/ubarni/Smart-Campe
 
 This project provides a modern, touch-enabled smart UI for your fridge, replacing analog thermostats with precise digital temperature management, dynamic compressor speed control, and built-in battery protection.
 
-https://github.com/user-attachments/assets/c929fbea-1178-4309-9948-f9e8a38f8adf
+https://github.com/user-attachments/assets/8034e03e-43d9-4a4a-a77b-4d3339af659d
 
 ## Screenshot Home Assistant
 [**Smart Fridge (View)**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/3c6792e76c0abe57d38a256c658d0e316bda5d45/smart_fridge_view.yaml)
