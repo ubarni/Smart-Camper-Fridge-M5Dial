@@ -19,7 +19,7 @@ Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge
 * **Modern Touch UI & Rotary Encoder:** Intuitive control over temperature and compressor speeds using the M5Dial's rotating bezel and round touch screen.
 * **Intelligent Compressor Control:** Variable PWM speed control allows you to run the compressor in `Night` (Quiet/Slow), `Normal`, or `Power` (Fast cooling) modes.
 * **Dual-Zone "Freezer Guard" Mode:** Single-compressor RV refrigerators share a single cooling circuit between the main compartment and the freezer. When the Freezer Guard Mode is ON the compressor logic reacts on fridge AND freezer target temperatures. 
-* **Smart Soft-Start:** Gently spins up the compressor to reduce mechanical wear and voltage drops.
+* **Locktime:** Prevents the compressor from starting within a preset time. This extends the compressors lifetime.
 * **Low Voltage Disconnect (LVD):** Monitors battery voltage and safely shuts down the fridge before your camper's battery is depleted (Configurable via Home Assistant).
 * **Failsafe Mechanisms:** Prevents infinite compressor loops if a temperature sensor fails or gets disconnected.
 * **SECOP Error Decoding:** Directly reads and decodes the diagnostic pulses from the SECOP controller (e.g., "E3: Motor failure") and displays the exact cause on the screen.
@@ -30,13 +30,14 @@ Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge
 
 * **M5Stack M5Dial 1.1** (ESP32-S3 with integrated touch display and rotary encoder)
 * **SECOP Compressor Controller** (e.g., 101N0212 for BD35F/BD50F)
-* **DS18B20 Temperature Sensors** (Up to 3 sensors supported for Fridge, Freezer, and Compressor ambient)
-* **Voltage Divider** (To safely measure the 12V/24V battery line via the M5Dial's 3.3V ADC)
-* **Optocouplers:** 2x PC817 (For isolating DIAG and PWM signals)
-* **Resistors:** * 1x 47 kΩ + 1x 10 kΩ (For the 14V -> 3.3V analog voltage divider)
-  * 1x 10 kΩ (Strong external pull-up for the DIAG optocoupler output to guarantee noise immunity)
-  * Resistors matching your PC817 LED inputs (typically 220 Ohm to 470 Ohm)
+* **DS18B20 Temperature Sensors** (Up to 3 sensors supported for Fridge, Freezer, and Compressor)
   * 1x 4.7 kΩ Pull-up resistors for the DS18B20 data line
+* **Voltage Divider** (To safely measure the 12V/24V battery line via the M5Dial's 3.3V ADC)
+  * 1x 100 kΩ + 1x 10 kΩ (For the 36V -> 3.3V analog voltage divider)
+  * 1x 100nF Condensator
+* **Optocouplers:** 2x PC817 (For isolating DIAG and PWM signals)
+  * 1x 1 kΩ (PWM)
+  * 1x 220Ω (DIAG)
 
 ---
 
