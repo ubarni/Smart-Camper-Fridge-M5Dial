@@ -4,7 +4,7 @@ An advanced, fully integrated open-source controller for 12V/24V camper refriger
 
 Tested with [**WAECO Coolmatic MDC-090K**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/c926922314870ae8d956f22f25ac7502f4ca9708/manual-coolmatic-mdc090k.pdf) and [**SECOP 101N0650 Controller**](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/c926922314870ae8d956f22f25ac7502f4ca9708/secop_bd35f_bd50f_bd35k_electronic_unit_101n0212_101n0340_101n0650_12-24vdc_08-2019_desi101e502.pdf)
 
-This project provides a modern, touch-enabled smart UI for your fridge, replacing analog thermostats with precise digital temperature management, dynamic compressor speed control, and built-in battery protection.
+This project provides a modern, touch-enabled smart UI for your fridge, replacing analog thermostats with precise digital temperature management, dynamic compressor speed control, Freezer Guard mode and built-in battery protection.
 
 https://github.com/user-attachments/assets/8034e03e-43d9-4a4a-a77b-4d3339af659d
 
