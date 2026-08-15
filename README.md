@@ -1,4 +1,3 @@
-<img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/89014a29-3bb2-43e4-9589-75955e331323" />
 # Smart Camper Fridge Controller (M5Dial)
 
 An advanced, fully integrated open-source controller for 12V/24V camper refrigerators using SECOP (Danfoss) compressors, powered by an [**M5Stack Dial 1.1**](https://docs.m5stack.com/en/core/M5Dial) running **ESPHome** with **Home Assistant Integration**.
