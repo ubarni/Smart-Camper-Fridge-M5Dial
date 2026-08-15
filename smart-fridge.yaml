@@ -36,11 +36,11 @@ logger:
 
 api:
   encryption:
-    key: "UpqtwOF9dFA0zdkV585rFijX4IySnybn2vuiYRxFG/g="
+    key: "UpqtwOF9dFA0zdkV585rFijX4IySnybn2vuiYRcFG/g="
 
 ota:
   - platform: esphome
-    password: "33c564707f7fd52c1bcca740107f8da4"
+    password: "33c564707f7fd52c1bcca740107f9da4"
     
 wifi:
   networks:
@@ -202,13 +202,13 @@ sensor:
     update_interval: 2s
     unit_of_measurement: "V"
     accuracy_decimals: 1
-    attenuation: auto
+    attenuation: 12db
     filters:
       - sliding_window_moving_average:
           window_size: 5
           send_every: 1
       - lambda: return (x * id(volt_multiplier).state) + id(volt_offset).state;
-
+        
   # Integrated software power estimation
   - platform: template
     name: "Fridge Power"
@@ -232,10 +232,10 @@ sensor:
     time_unit: h
     restore: true
     
-  # Calculates the remaining startup lock time in seconds
+  # Calculates the remaining lock time in seconds
   - platform: template
-    name: "Startup Lock Remain"
-    id: startup_lock_remaining
+    name: "Lock Remain"
+    id: lock_remaining
     unit_of_measurement: "s"
     accuracy_decimals: 0
     icon: "mdi:timer-sand"
@@ -243,7 +243,7 @@ sensor:
     entity_category: "diagnostic"
     lambda: |-
       uint32_t now = millis();
-      uint32_t lock_ms = (uint32_t)id(startup_lock_duration).state * 1000;
+      uint32_t lock_ms = (uint32_t)id(lock_duration).state * 1000;
       if (id(last_compressor_stop) == 0 || (now - id(last_compressor_stop) >= lock_ms)) {
         return 0;
       } else {
@@ -283,11 +283,11 @@ sensor:
             float next_val = id(compressor_speed_pct).state + 1.0f;
             if (next_val <= 100.0f) id(compressor_speed_pct).make_call().set_value(next_val).perform();
           } else if (id(ui_mode) == 2) {
-            float next_val = id(display_brightness_pct).state + 10.0f;
-            if (next_val <= 100.0f) id(display_brightness_pct).make_call().set_value(next_val).perform();
-          } else if (id(ui_mode) == 3) {
             float next_val = id(freezer_target_temp).state + 1.0f;
             if (next_val <= 0.0f) id(freezer_target_temp).make_call().set_value(next_val).perform();
+          } else if (id(ui_mode) == 3) {
+            float next_val = id(display_brightness_pct).state + 10.0f;
+            if (next_val <= 100.0f) id(display_brightness_pct).make_call().set_value(next_val).perform();
           }
     on_anticlockwise:
       - lambda: |-
@@ -298,11 +298,11 @@ sensor:
             float next_val = id(compressor_speed_pct).state - 1.0f;
             if (next_val >= 0.0f) id(compressor_speed_pct).make_call().set_value(next_val).perform();
           } else if (id(ui_mode) == 2) {
-            float next_val = id(display_brightness_pct).state - 10.0f;
-            if (next_val >= 10.0f) id(display_brightness_pct).make_call().set_value(next_val).perform();
-          } else if (id(ui_mode) == 3) {
             float next_val = id(freezer_target_temp).state - 1.0f;
             if (next_val >= -20.0f) id(freezer_target_temp).make_call().set_value(next_val).perform();
+          } else if (id(ui_mode) == 3) {
+            float next_val = id(display_brightness_pct).state - 10.0f;
+            if (next_val >= 10.0f) id(display_brightness_pct).make_call().set_value(next_val).perform();
           }
 
 number:
@@ -368,7 +368,7 @@ number:
     id: low_voltage_cutoff
     entity_category: "config"
     min_value: 9.0
-    max_value: 26.0
+    max_value: 30.0
     step: 0.1
     initial_value: 11.5
     restore_value: true
@@ -539,8 +539,8 @@ number:
           id(fridge_settings_log).publish_state(buf);
 
   - platform: template
-    name: "Startup Lock Duration"
-    id: startup_lock_duration
+    name: "Lock Duration"
+    id: lock_duration
     unit_of_measurement: "s"
     min_value: 10
     max_value: 60
@@ -561,12 +561,12 @@ number:
     id: volt_multiplier
     entity_category: "config"
     min_value: 1.0
-    max_value: 10.0
+    max_value: 20.0
     step: 0.01
-    initial_value: 5.73
+    initial_value: 11
     restore_value: true
     optimistic: true
-    
+
   - platform: template
     name: "Calibration: Voltage-Offset"
     id: volt_offset
@@ -577,7 +577,7 @@ number:
     initial_value: 0.0
     restore_value: true
     optimistic: true
-
+    
 select:
   - platform: template
     name: "Temp Target Mode"
@@ -680,7 +680,7 @@ text_sensor:
       entity_category: "diagnostic"
 
 binary_sensor:
-
+  
   - platform: template
     name: "Compressor Running"
     id: compressor_running
@@ -758,16 +758,16 @@ binary_sensor:
                 id(compressor_mode_select).make_call().set_index(next_index).perform();
 
               } else if (id(ui_mode) == 2) {
-                float cur = id(display_brightness_pct).state;
-                float next = (cur == 30.0f) ? 70.0f : (cur == 70.0f) ? 100.0f : 30.0f;
-                id(display_brightness_pct).make_call().set_value(next).perform();
-                
-              } else if (id(ui_mode) == 3) {
                 if (id(freezer_guard_mode).state) {
                   id(freezer_guard_mode).turn_off();
                 } else {
                   id(freezer_guard_mode).turn_on();
                 }
+              } else if (id(ui_mode) == 3) {
+                float cur = id(display_brightness_pct).state;
+                float next = (cur == 30.0f) ? 70.0f : (cur == 70.0f) ? 100.0f : 30.0f;
+                id(display_brightness_pct).make_call().set_value(next).perform();
+                
               }
               
       # DOUBLE CLICK: Cycles through all 4 modes
@@ -902,8 +902,8 @@ display:
       // --- 1. CALCULATE ADAPTIVE MODE PARAMETERS ---
       Color mode_color = c_blue;
       if (id(ui_mode) == 1)      mode_color = c_orange;
-      else if (id(ui_mode) == 2) mode_color = c_yellow;
-      else if (id(ui_mode) == 3) mode_color = c_cyan;
+      else if (id(ui_mode) == 2) mode_color = c_cyan;
+      else if (id(ui_mode) == 3) mode_color = c_yellow;
       
       float pct = 0.0f;
       if (id(ui_mode) == 0) {
@@ -913,12 +913,12 @@ display:
         float s_target = id(compressor_speed_pct).state;
         if (!std::isnan(s_target)) pct = s_target / 100.0f; 
       } else if (id(ui_mode) == 2) {
-        float b_target = id(display_brightness_pct).state;
-        if (!std::isnan(b_target)) pct = b_target / 100.0f; 
-      } else if (id(ui_mode) == 3) {
         float fz_target = id(freezer_target_temp).state;
         // Skaliere -20°C bis 0°C auf 0.0 bis 1.0
         if (!std::isnan(fz_target)) pct = (fz_target + 20.0f) / 20.0f; 
+      } else if (id(ui_mode) == 3) {
+        float b_target = id(display_brightness_pct).state;
+        if (!std::isnan(b_target)) pct = b_target / 100.0f; 
       }
       
       if (pct < 0.0f) pct = 0.0f;
@@ -948,7 +948,7 @@ display:
       }
 
       // --- 3. TOP AREA: Dynamic Temperature Mode Text ---
-      if (id(ui_mode) == 3) {
+      if (id(ui_mode) == 2) {
         it.printf(120, 44, id(font_medium), c_cyan, TextAlign::CENTER, "Freezer");
       } else {
         std::string t_mode = "Manual";
@@ -1009,12 +1009,6 @@ display:
           }
           it.printf(120, 153, id(font_medium), c_orange, TextAlign::CENTER, "%s", c_mode.c_str());
         } else if (id(ui_mode) == 2) {
-          float b_target = id(display_brightness_pct).state;
-          if (!std::isnan(b_target)) {
-            it.printf(120, 90, id(font_huge), c_yellow, TextAlign::CENTER, "%.0f%%", b_target); 
-          }
-          it.printf(120, 153, id(font_medium), c_yellow, TextAlign::CENTER, "Brightness"); 
-        } else if (id(ui_mode) == 3) {
           float fz_target = id(freezer_target_temp).state;
           if (!std::isnan(fz_target)) {
             it.printf(120, 90, id(font_huge), c_cyan, TextAlign::CENTER, "%.0f°", fz_target); 
@@ -1024,12 +1018,18 @@ display:
           } else {
             it.printf(120, 153, id(font_medium), c_gray, TextAlign::CENTER, "Guard OFF"); 
           }
+        } else if (id(ui_mode) == 3) {
+          float b_target = id(display_brightness_pct).state;
+          if (!std::isnan(b_target)) {
+            it.printf(120, 90, id(font_huge), c_yellow, TextAlign::CENTER, "%.0f%%", b_target); 
+          }
+          it.printf(120, 153, id(font_medium), c_yellow, TextAlign::CENTER, "Brightness"); 
         }
       }
 
       // --- 5.5. STATUS NOTIFICATIONS (Locktime / Softstart) ---
-      float lock_remain = id(startup_lock_remaining).state;
-      bool is_locked = (id(startup_lock_remaining).has_state() && lock_remain > 0.0f);
+      float lock_remain = id(lock_remaining).state;
+      bool is_locked = (id(lock_remaining).has_state() && lock_remain > 0.0f);
 
       if (is_locked) {
         char buf[32];
@@ -1198,7 +1198,7 @@ script:
           ESP_LOGD("fridge_logic", "Heartbeat: Script called. Main Switch status is: %s", 
                    id(fridge_main_switch).state ? "ON" : "OFF");
           
-          float lock_state = id(startup_lock_duration).state;
+          float lock_state = id(lock_duration).state;
           uint32_t lock_ms = (std::isnan(lock_state)) ? 30000 : (uint32_t)lock_state * 1000;
           
           // Abort if switch is off
