@@ -54,12 +54,12 @@ sections:
           - condition: state
             state_not: OK
       - type: custom:mushroom-entity-card
-        entity: sensor.smart_fridge_startup_lock_remain
+        entity: sensor.smart_fridge_lock_remain
         layout: horizontal
-        icon_color: amber
+        icon_color: red
         primary_info: name
         secondary_info: state
-        name: Startup Lock Remain
+        name: Lock Remain
         visibility:
           - condition: numeric_state
             above: 0
@@ -200,7 +200,7 @@ sections:
               state_background: true
               show_arrow: true
               sub_button_type: select
-              icon: ""
+              icon: ''
             - name: TEMP modes menu
               select_attribute: preset_modes
               state_background: false
@@ -653,7 +653,7 @@ sections:
         entities:
           - entity: sensor.smart_fridge_temp_fridge
             name: Kühlraum
-            color: "#00e5ff"
+            color: '#00e5ff'
             show_state: true
             show_indicator: true
             state_adaptive_color: true
@@ -665,10 +665,61 @@ sections:
             state_adaptive_color: true
           - entity: sensor.smart_fridge_temp_compressor
             name: Kompressor
-            color: "#ffa726"
+            color: '#ffa726'
             show_state: true
             show_indicator: true
             state_adaptive_color: true
+      - type: custom:mini-graph-card
+        name: Fridge
+        height: 200
+        hours_to_show: 8
+        hour24: true
+        points_per_hour: 60
+        line_width: 1.5
+        upper_bound: 20
+        lower_bound: -20
+        upper_bound_secondary: 1
+        lower_bound_secondary: 0
+        decimals: 1
+        entities:
+          - entity: sensor.smart_fridge_temp_fridge
+            name: Fridge
+            color: '#4d7ebd'
+            show_state: true
+            show_points: false
+            show_fill: false
+            state_adaptive_color: treu
+          - entity: number.smart_fridge_fridge_target_temp
+            name: Target
+            color: '#4d7ebd'
+            show_state: false
+            show_points: false
+            show_fill: true
+            show_line: true
+          - entity: sensor.smart_fridge_temp_freezer
+            name: Freezer
+            color: blue
+            show_state: true
+            show_fill: false
+            state_adaptive_color: true
+          - entity: number.smart_fridge_freezer_target_temp
+            name: Target
+            color: blue
+            show_state: false
+            show_points: false
+            show_fill: true
+            show_line: true
+          - entity: number.compressor_state_graph
+            name: Compressor
+            color: orange
+            y_axis: secondary
+            show_line: false
+            show_points: false
+            show_fill: true
+        show:
+          name: false
+          icon: false
+          legend: true
   - type: grid
     cards:
       - type: heading
@@ -681,7 +732,7 @@ sections:
           - entity: number.smart_fridge_temp_preset_fresh
             name: Fresh
           - entity: number.smart_fridge_temp_preset_cold
-            icon: ""
+            icon: ''
             name: Cold
           - entity: number.smart_fridge_temp_preset_eco
             name: Eco
@@ -710,7 +761,7 @@ sections:
           - entity: number.smart_fridge_compressor_preset_night
             name: Night
           - entity: number.smart_fridge_compressor_preset_normal
-            icon: ""
+            icon: ''
             name: Normal
           - entity: number.smart_fridge_compressor_preset_power
             name: Power
@@ -762,10 +813,10 @@ sections:
           - entity: number.smart_fridge_hysteresis
             name:
               type: entity
-          - entity: number.smart_fridge_startup_lock_duration
+          - entity: number.smart_fridge_lock_duration
             name:
               type: entity
-          - entity: sensor.smart_fridge_startup_lock_remain
+          - entity: sensor.smart_fridge_lock_remain
             name:
               type: entity
           - entity: number.smart_fridge_low_voltage_cutoff
@@ -792,6 +843,8 @@ sections:
       - type: entities
         show_header_toggle: false
         entities:
+          - entity: binary_sensor.smart_fridge_compressor_running
+            name: Compressor State
           - entity: sensor.smart_fridge_wifi_signal_strength
             name: WiFi Signal
           - entity: sensor.smart_fridge_wifi_signal_db
@@ -802,7 +855,7 @@ sections:
           - entity: sensor.smart_fridge_mac_address
             name: MAC Address
         grid_options:
-          rows: 2
+          rows: 2.8
           columns: 12
         card_mod:
           style: |
