@@ -33,7 +33,7 @@ Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge
 * **DS18B20 Temperature Sensors** (Up to 3 sensors supported for Fridge, Freezer, and Compressor)
   * 1x 4.7 kΩ Pull-up resistors for the DS18B20 data line
 * **Voltage Divider** (To safely measure the 12V/24V battery line via the M5Dial's 3.3V ADC)
-  * 1x 100 kΩ + 1x 10 kΩ (For the 36V -> 3.3V analog voltage divider)
+  * 1x 100 kΩ + 1x 10 kΩ 1% Metal film resistor (For the 36V -> 3.3V analog voltage divider)
   * 1x 100nF Condensator
 * **Optocouplers:** 2x PC817 (For isolating DIAG and PWM signals)
   * 1x 1 kΩ (PWM)
