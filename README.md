@@ -193,7 +193,8 @@ return 57.0f + ((speed / 100.0f) * 15.0f);
 <img width="423" height="563" alt="Bildschirmfoto 2026-07-29 um 21 32 17" src="https://github.com/user-attachments/assets/8bd5f361-3a0b-4965-b364-a2c43cdb34aa" />
 <img width="426" height="482" alt="Bildschirmfoto 2026-07-29 um 21 32 30" src="https://github.com/user-attachments/assets/a654291a-b1b7-460f-bf8a-5c9eb69df57d" />
 <img width="428" height="935" alt="Bildschirmfoto 2026-07-29 um 21 32 51" src="https://github.com/user-attachments/assets/8c6d1983-3c4b-4779-85a3-ea04c35f614c" />
-<img width="428" height="675" alt="Bildschirmfoto 2026-07-29 um 21 33 02" src="https://github.com/user-attachments/assets/dd6eaded-26b0-4079-b5ca-841311bf066d" />
+<img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/e56a30bf-524e-46fb-a1bf-3ca3ea77ecfb" />
+
 
 ## License & Contributing
 
