@@ -68,10 +68,12 @@ Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 1
 * **DIAG Input:** Secop terminal **D** drives the second PC817 input. The output transistor pulls **GPIO38** down to GND when active. 
 
 ## Wiring "Diagram"
-> ⚠️ **KiCAD files will be available after testing**
+> ⚠️ **KiCAD and 3D print files will be available after testing**
 <img width="1220" height="689" alt="Smart Camper Fridge M5Stack Dial" src="https://github.com/user-attachments/assets/6f382df6-070e-4aa6-944d-a062819fc44a" />
 <img width="1040" height="706" alt="Bildschirmfoto 2026-08-14 um 09 46 03" src="https://github.com/user-attachments/assets/0e6e5dda-244e-49e7-a141-4b3bd36d689f" />
 <img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/07ea2c6a-bfbb-411e-a562-bd9dd07d47db" />
+
+**[Click here to see the 3D model of the case](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/1929dae5fefd54ca2ec57aa82e2640f9eb83e18b/Smart%20Fridge%20Geha%CC%88use.stl)**
 
 ---
 
