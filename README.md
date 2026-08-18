@@ -70,6 +70,7 @@ Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 1
 ## Wiring "Diagram"
 > ⚠️ **KiCAD and 3D print files will be available after testing**
 <img width="1220" height="689" alt="Smart Camper Fridge M5Stack Dial" src="https://github.com/user-attachments/assets/6f382df6-070e-4aa6-944d-a062819fc44a" />
+<img width="812" height="654" alt="Bildschirmfoto 2026-08-18 um 14 41 28" src="https://github.com/user-attachments/assets/1989b883-f05c-411f-93ba-f9e2c5af3151" />
 <img width="1040" height="706" alt="Bildschirmfoto 2026-08-14 um 09 46 03" src="https://github.com/user-attachments/assets/0e6e5dda-244e-49e7-a141-4b3bd36d689f" />
 <img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/07ea2c6a-bfbb-411e-a562-bd9dd07d47db" />
 
@@ -195,8 +196,6 @@ return 57.0f + ((speed / 100.0f) * 15.0f);
 <img width="423" height="563" alt="Bildschirmfoto 2026-07-29 um 21 32 17" src="https://github.com/user-attachments/assets/8bd5f361-3a0b-4965-b364-a2c43cdb34aa" />
 <img width="426" height="482" alt="Bildschirmfoto 2026-07-29 um 21 32 30" src="https://github.com/user-attachments/assets/a654291a-b1b7-460f-bf8a-5c9eb69df57d" />
 <img width="428" height="935" alt="Bildschirmfoto 2026-07-29 um 21 32 51" src="https://github.com/user-attachments/assets/8c6d1983-3c4b-4779-85a3-ea04c35f614c" />
-<img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/e56a30bf-524e-46fb-a1bf-3ca3ea77ecfb" />
-
 
 ## License & Contributing
 
