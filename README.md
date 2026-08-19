@@ -70,9 +70,9 @@ Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 1
 ## Wiring "Diagram"
 > ⚠️ **KiCAD and 3D print files will be available after testing**
 <img width="1220" height="689" alt="Smart Camper Fridge M5Stack Dial" src="https://github.com/user-attachments/assets/6f382df6-070e-4aa6-944d-a062819fc44a" />
-<img width="812" height="654" alt="Bildschirmfoto 2026-08-18 um 14 41 28" src="https://github.com/user-attachments/assets/1989b883-f05c-411f-93ba-f9e2c5af3151" />
+<img width="826" height="632" alt="Bildschirmfoto 2026-08-19 um 16 03 24" src="https://github.com/user-attachments/assets/a9f06e74-2417-4f0a-a214-9b2361356eb5" />
 <img width="1040" height="706" alt="Bildschirmfoto 2026-08-14 um 09 46 03" src="https://github.com/user-attachments/assets/0e6e5dda-244e-49e7-a141-4b3bd36d689f" />
-<img width="889" height="806" alt="Bildschirmfoto 2026-08-14 um 15 33 50" src="https://github.com/user-attachments/assets/07ea2c6a-bfbb-411e-a562-bd9dd07d47db" />
+<img width="944" height="902" alt="Bildschirmfoto 2026-08-19 um 16 02 35" src="https://github.com/user-attachments/assets/464e5994-336a-4257-a5fd-d83037c2962e" />
 
 **[Click here to see the 3D model of the case](https://github.com/ubarni/Smart-Camper-Fridge-M5Dial/blob/1929dae5fefd54ca2ec57aa82e2640f9eb83e18b/Smart%20Fridge%20Geha%CC%88use.stl)**
 
