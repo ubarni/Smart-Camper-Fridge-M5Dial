@@ -28,16 +28,27 @@ Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge
 
 ## 🛠️ Hardware Requirements
 
-* **M5Stack M5Dial 1.1** (ESP32-S3 with integrated touch display and rotary encoder)
-* **SECOP Compressor Controller** (e.g., 101N0212 for BD35F/BD50F)
-* **DS18B20 Temperature Sensors** (Up to 3 sensors supported for Fridge, Freezer, and Compressor)
+* **M5Stack M5Dial 1.1**
+  * 1x [**M5Stack Dial 1.1**](https://shop.m5stack.com/products/m5stack-dial-v1-1) (ESP32-S3 with integrated touch display and rotary encoder) https://shop.m5stack.com/products/m5stack-dial-v1-1
+* **DS18B20 Temperature Sensors**
+  * 3x DS18B20 temperature sensors supported for Fridge, Freezer, and Compressor
   * 1x 4.7 kΩ Pull-up resistors for the DS18B20 data line
-* **Voltage Divider** (To safely measure the 12V/24V battery line via the M5Dial's 3.3V ADC)
-  * 1x 100 kΩ + 1x 10 kΩ 1% Metal film resistor (For the 36V -> 3.3V analog voltage divider)
+* **36V -> 3.3V analog Voltage Divider** (To safely measure the 12V/24V battery line via the M5Dial's 3.3V ADC)
+  * 1x 100 kΩ + 1x 10 kΩ **1% Metal film resistor**
   * 1x 100nF Condensator
-* **Optocouplers:** 2x PC817 (For isolating DIAG and PWM signals)
+* **Optocouplers:**
+  * 2x PC817 (For isolating DIAG and PWM signals)
   * 1x 1 kΩ (PWM)
   * 1x 220Ω (DIAG)
+* **Connectors:**
+  * 2x [**M5Stack Grove cable**](https://shop.m5stack.com/products/4pin-buckled-grove-cable) or JST PH 2.00mm 4 pin female cables
+  * 2x [**JST PH 2.00mm 4 pin male PCB connector**] for M5Dial Grove cables
+  * 2x [**JST XH 2.54mm 2 pin male PCB connector**] for M5Dial power supply PCB
+  * 2x [**JST XH 2.54mm 2 pin female PCB connector**] for M5Dial power supply cable
+  * 1x [**JST XH 2.54mm 4 pin male connector**] for SECOP connection PCB
+  * 1x [**JST XH 2.54mm 4 pin female PCB connector**] for SECOP connection cable
+  * 3x [**JST XH 2.54mm 3 pin male connector**] for DS18B20 connection PCB
+  * 3x [**JST XH 2.54mm 3 pin female PCB connector**] for DS18B20 connection cable
 
 ---
 
