@@ -38,6 +38,8 @@ Needs: [**climate_template.yaml**](https://github.com/ubarni/Smart-Camper-Fridge
   * 1x 100nF Condensator
 * **Optocouplers:**
   * 2x PC817 (For isolating DIAG and PWM signals)
+    * **PWM Output:** M5Dial GPIO39 drives the internal LED of the first PC817. The transistor side connects directly to Secop terminals **T** and **C**.
+    * **DIAG Input:** Secop terminal **D** drives the second PC817 input. The output transistor pulls **GPIO38** down to GND when active. 
   * 1x 1 kΩ (PWM)
   * 1x 220Ω (DIAG)
 * **Connectors:**
@@ -63,20 +65,6 @@ The code is pre-configured to utilize the easily accessible Grove ports on the b
   * `GPIO2` (Yellow Wire): Shared OneWire Data Pin for ALL DS18B20 Temperature Sensors.
   * `GPIO1` (White Wire): ADC Input for Battery Voltage Divider.
 ---
-
-## Wiring & Schematic
-
-### 1. High-Current DC Path (12V/24V)
-* Connect the main battery positive (+) and negative (-) through a fuse to the M5Dial terminal. Voltage input range is 6 ~ 36V DC.
-
-### 2. Voltage Divider (Battery Voltage Sense)
-Connect the Battery positive (+) to the 47 kΩ resistor. Bridge the 47 kΩ and 10 kΩ resistors into **GPIO1**. Connect the other side of the 10 kΩ resistor to **GND**.
-
-> ⚠️ **CRITICAL NOTE:** The ground (GND) of the 12V Battery/Power supply and the GND of the M5Dial **must** be tied together for the analog voltage and current inputs to share a valid electrical reference plane!
-
-### 3. Optocoupler Isolation (Secop Interface)
-* **PWM Output:** M5Dial GPIO39 drives the internal LED of the first PC817 (via a current limiting resistor). The transistor side connects directly to Secop terminals **T** and **C**.
-* **DIAG Input:** Secop terminal **D** drives the second PC817 input. The output transistor pulls **GPIO38** down to GND when active. 
 
 ## Wiring "Diagram"
 > ⚠️ **KiCAD and 3D print files will be available after testing**
